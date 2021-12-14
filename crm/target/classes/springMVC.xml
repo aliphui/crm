@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xmlns:mvc="http://www.springframework.org/schema/mvc"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+        http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd
+        http://www.springframework.org/schema/mvc http://www.springframework.org/schema/mvc/spring-mvc.xsd">
+
+    <!--开启注解扫描-->
+    <context:component-scan base-package="com.atguigu.crm.setting.controller"></context:component-scan>
+    <context:component-scan base-package="com.atguigu.crm.workbench.controller"></context:component-scan>
+
+    <!--视图解析器-->
+    <bean class="org.springframework.web.servlet.view.InternalResourceViewResolver">
+        <!--视图前缀-->
+        <property name="prefix" value="WEB-INF/views/"/>
+        <!--视图后缀-->
+        <property name="suffix" value=".jsp"/>
+    </bean>
+
+    <!--配置拦截器-->
+    <mvc:interceptors>
+        <mvc:interceptor>
+            <mvc:mapping path="/**"/>
+            <mvc:exclude-mapping path="/"/>
+            <mvc:exclude-mapping path="/static/**"/>
+            <mvc:exclude-mapping path="/login"/>
+            <mvc:exclude-mapping path="/loginJsp"/>
+            <bean class="com.atguigu.crm.interceptor.SessionInterceptor"></bean>
+        </mvc:interceptor>
+    </mvc:interceptors>
+
+    <!--视图控制器-->
+    <mvc:view-controller path="/" view-name="index"></mvc:view-controller>
+    <mvc:view-controller path="/loginJsp" view-name="login"></mvc:view-controller>
+    <mvc:view-controller path="/setting" view-name="settings/index"></mvc:view-controller>
+    <mvc:view-controller path="/workbench" view-name="workbench/index"></mvc:view-controller>
+    <mvc:view-controller path="/mainIndex" view-name="workbench/main/index"></mvc:view-controller>
+    <mvc:view-controller path="/activityIndex" view-name="workbench/activity/index"></mvc:view-controller>
+    <mvc:view-controller path="/clueIndex" view-name="workbench/clue/index"></mvc:view-controller>
+    <mvc:view-controller path="/clueDetail" view-name="workbench/clue/detail"></mvc:view-controller>
+    <mvc:view-controller path="/clueConvert" view-name="workbench/clue/convert"></mvc:view-controller>
+
+    <mvc:view-controller path="/customerIndex" view-name="workbench/customer/index"></mvc:view-controller>
+    <mvc:view-controller path="/contactsIndex" view-name="workbench/contacts/index"></mvc:view-controller>
+    <mvc:view-controller path="/transactionIndex" view-name="workbench/transaction/index"></mvc:view-controller>
+    <mvc:view-controller path="/transactionDetail" view-name="workbench/transaction/detail"></mvc:view-controller>
+    <mvc:view-controller path="/transactionEdit" view-name="workbench/transaction/edit"></mvc:view-controller>
+    <mvc:view-controller path="/transactionSave" view-name="workbench/transaction/save"></mvc:view-controller>
+
+    <mvc:view-controller path="/visitIndex" view-name="workbench/visit/index"></mvc:view-controller>
+    <mvc:view-controller path="/chartActivityIndex" view-name="workbench/chart/activity/index"></mvc:view-controller>
+    <mvc:view-controller path="/chartClueIndex" view-name="workbench/chart/clue/index"></mvc:view-controller>
+    <mvc:view-controller path="/chartCustomerAndContactsIndex" view-name="workbench/chart/customerAndContacts/index"></mvc:view-controller>
+    <mvc:view-controller path="/chartTransactionIndex" view-name="workbench/chart/transaction/index"></mvc:view-controller>
+    <!--开启注解驱动,支持springmvc更高级的功能-->
+    <mvc:annotation-driven>
+        <mvc:message-converters>
+            <!--处理响应中文内容乱码-->
+            <bean class="org.springframework.http.converter.StringHttpMessageConverter">
+                <property name="defaultCharset" value="UTF-8"/>
+                <property name="supportedMediaTypes">
+                    <list>
+                        <value>text/html</value>
+                        <value>application/json</value>
+                    </list>
+                </property>
+            </bean>
+        </mvc:message-converters>
+    </mvc:annotation-driven>
+
+    <!--开启默认servlet扫描静态资源-->
+    <mvc:default-servlet-handler ></mvc:default-servlet-handler>
+
+
+
+</beans>

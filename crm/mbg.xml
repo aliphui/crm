@@ -1,0 +1,138 @@
+<?xml  version="1.0"  encoding="UTF-8"?>
+<!DOCTYPE  generatorConfiguration
+        PUBLIC  "-//mybatis.org//DTDMyBatisGeneratorConfiguration1.0//EN"
+         "http://mybatis.org/dtd/mybatis-generator-config_1_0.dtd">
+
+<generatorConfiguration>
+    <context id="DB2Tables" targetRuntime="MyBatis3">
+
+        <!--不生成注释-->
+        <commentGenerator>
+            <property  name="suppressAllComments"  value="true"/>
+        </commentGenerator>
+
+        <!--数据库连接-->
+        <jdbcConnection
+                driverClass="com.mysql.jdbc.Driver"
+                connectionURL="jdbc:mysql://localhost:3306/crm?serverTimezone=Asia/Shanghai"
+                userId="root"
+                password="123456789">
+        </jdbcConnection>
+
+        <javaTypeResolver>
+            <property  name="forceBigDecimals"  value="false"/>
+        </javaTypeResolver>
+
+        <!--指定javaBean生成的位置-->
+        <javaModelGenerator
+                targetPackage="com.atguigu.crm.workbench.domain"
+                targetProject=".\src\main\java">
+            <property  name="enableSubPackages"  value="true"/>
+            <property  name="trimStrings"  value="true"/>
+        </javaModelGenerator>
+
+        <!--mapper文件生成的位置-->
+        <sqlMapGenerator
+                targetPackage="mapper"
+                targetProject=".\src\main\resources">
+            <property  name="enableSubPackages"  value="true"/>
+        </sqlMapGenerator>
+
+        <!--指定dao接口生成的位置-->
+        <javaClientGenerator type="XMLMAPPER"
+                             targetPackage="com.atguigu.crm.workbench.dao"
+                             targetProject=".\src\main\java">
+        <property  name="enableSubPackages"  value="true"/>
+    </javaClientGenerator>
+
+    <!--指定每张表的生成策略-->
+    <table   schema="DB2ADMIN"
+             tableName="tbl_clue"
+             domainObjectName="Clue">
+        <generatedKey  column="ID"  sqlStatement="DB2"  identity="true"/>
+        <columnOverride  column="DATE_FIELD"  property="startDate"/>
+        <ignoreColumn  column="FRED"/>
+        <columnOverride  column="LONG_VARCHAR_FIELD"  jdbcType="VARCHAR"/>
+    </table>
+    <table  schema="DB2ADMIN"
+            tableName="tbl_clue_activity_relation"
+            domainObjectName="ClueActivityRelation">
+        <generatedKey  column="ID"  sqlStatement="DB2"  identity="true"/>
+        <columnOverride  column="DATE_FIELD"  property="startDate"/>
+        <ignoreColumn  column="FRED"/>
+        <columnOverride  column="LONG_VARCHAR_FIELD"  jdbcType="VARCHAR"/>
+    </table>
+    <table  schema="DB2ADMIN"
+            tableName="tbl_clue_remark"
+            domainObjectName="ClueRemark">
+        <generatedKey  column="ID"  sqlStatement="DB2"  identity="true"/>
+        <columnOverride  column="DATE_FIELD"  property="startDate"/>
+        <ignoreColumn  column="FRED"/>
+        <columnOverride  column="LONG_VARCHAR_FIELD"  jdbcType="VARCHAR"/>
+    </table>
+    <table  schema="DB2ADMIN"
+            tableName="tbl_contacts"
+            domainObjectName="Contacts">
+        <generatedKey  column="ID"  sqlStatement="DB2"  identity="true"/>
+        <columnOverride  column="DATE_FIELD"  property="startDate"/>
+        <ignoreColumn  column="FRED"/>
+        <columnOverride  column="LONG_VARCHAR_FIELD"  jdbcType="VARCHAR"/>
+    </table>
+    <table  schema="DB2ADMIN"
+            tableName="tbl_contacts_activity_relation"
+            domainObjectName="ContactsActivityRelation">
+        <generatedKey  column="ID"  sqlStatement="DB2"  identity="true"/>
+        <columnOverride  column="DATE_FIELD"  property="startDate"/>
+        <ignoreColumn  column="FRED"/>
+        <columnOverride  column="LONG_VARCHAR_FIELD"  jdbcType="VARCHAR"/>
+    </table>
+    <table  schema="DB2ADMIN"
+            tableName="tbl_contacts_remark"
+            domainObjectName="ContactsRemark">
+        <generatedKey  column="ID"  sqlStatement="DB2"  identity="true"/>
+        <columnOverride  column="DATE_FIELD"  property="startDate"/>
+        <ignoreColumn  column="FRED"/>
+        <columnOverride  column="LONG_VARCHAR_FIELD"  jdbcType="VARCHAR"/>
+    </table>
+    <table  schema="DB2ADMIN"
+            tableName="tbl_customer"
+            domainObjectName="Customer">
+        <generatedKey  column="ID"  sqlStatement="DB2"  identity="true"/>
+        <columnOverride  column="DATE_FIELD"  property="startDate"/>
+        <ignoreColumn  column="FRED"/>
+        <columnOverride  column="LONG_VARCHAR_FIELD"  jdbcType="VARCHAR"/>
+    </table>
+    <table  schema="DB2ADMIN"
+            tableName="tbl_customer_remark"
+            domainObjectName="CustomerRemark">
+        <generatedKey  column="ID"  sqlStatement="DB2"  identity="true"/>
+        <columnOverride  column="DATE_FIELD"  property="startDate"/>
+        <ignoreColumn  column="FRED"/>
+        <columnOverride  column="LONG_VARCHAR_FIELD"  jdbcType="VARCHAR"/>
+    </table>
+    <table  schema="DB2ADMIN"
+            tableName="tbl_tran"
+            domainObjectName="Tran">
+        <generatedKey  column="ID"  sqlStatement="DB2"  identity="true"/>
+        <columnOverride  column="DATE_FIELD"  property="startDate"/>
+        <ignoreColumn  column="FRED"/>
+        <columnOverride  column="LONG_VARCHAR_FIELD"  jdbcType="VARCHAR"/>
+    </table>
+    <table  schema="DB2ADMIN"
+            tableName="tbl_tran_history"
+            domainObjectName="TranHistory">
+        <generatedKey  column="ID"  sqlStatement="DB2"  identity="true"/>
+        <columnOverride  column="DATE_FIELD"  property="startDate"/>
+        <ignoreColumn  column="FRED"/>
+        <columnOverride  column="LONG_VARCHAR_FIELD"  jdbcType="VARCHAR"/>
+    </table>
+    <table  schema="DB2ADMIN"
+            tableName="tbl_tran_remark"
+            domainObjectName="TranRemark">
+        <generatedKey  column="ID"  sqlStatement="DB2"  identity="true"/>
+        <columnOverride  column="DATE_FIELD"  property="startDate"/>
+        <ignoreColumn  column="FRED"/>
+        <columnOverride  column="LONG_VARCHAR_FIELD"  jdbcType="VARCHAR"/>
+    </table>
+    </context>
+</generatorConfiguration>
