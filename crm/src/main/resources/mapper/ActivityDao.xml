@@ -38,6 +38,15 @@
     <select id="selectOneActivity" resultType="Activity">
         select * from tbl_activity where id = #{id}
     </select>
+    <select id="selectActivityByClueId" resultType="Activity">
+        select car.id as id, a.name, a.startDate, a.endDate, u.name as owner
+        from tbl_activity a
+        join tbl_user u
+        on a.owner = u.id
+        join tbl_clue_activity_relation car
+        on a.id = car.activityId
+        where car.clueId = #{clueId}
+    </select>
     <insert id="createActivity">
         insert into tbl_activity (id,owner,name,startDate,endDate,cost,description,createTime,createBy)
         values (#{id},#{owner},#{name},#{startDate},#{endDate},#{cost},#{description},#{createTime},#{createBy})

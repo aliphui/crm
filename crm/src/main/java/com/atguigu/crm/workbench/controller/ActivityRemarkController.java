@@ -28,7 +28,7 @@ public class ActivityRemarkController {
 
     @RequestMapping(value = "/activityRemark",method = RequestMethod.GET)
     @ResponseBody
-    public List<ActivityRemark> addActivityRemark(@RequestParam String activityId) {
+    public List<ActivityRemark> selectActivityRemark(@RequestParam String activityId) {
 
         List<ActivityRemark> activityRemarks = activityRemarkService.selectActivityRemark(activityId);
         return activityRemarks;

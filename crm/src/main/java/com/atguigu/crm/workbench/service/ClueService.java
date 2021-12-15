@@ -16,4 +16,10 @@ public interface ClueService {
     boolean createClue(Clue clue);
 
     List<Clue> selectClueList(Clue clue);
+
+    Clue selectClueById(String id);
+
+    List<Activity>  selectActivityByClueId(String clueId);
+
+    boolean deleteRelationByCARId(String carId);
 }

@@ -14,7 +14,7 @@
     <!--视图解析器-->
     <bean class="org.springframework.web.servlet.view.InternalResourceViewResolver">
         <!--视图前缀-->
-        <property name="prefix" value="WEB-INF/views/"/>
+        <property name="prefix" value="/WEB-INF/views/"/>
         <!--视图后缀-->
         <property name="suffix" value=".jsp"/>
     </bean>
@@ -39,7 +39,6 @@
     <mvc:view-controller path="/mainIndex" view-name="workbench/main/index"></mvc:view-controller>
     <mvc:view-controller path="/activityIndex" view-name="workbench/activity/index"></mvc:view-controller>
     <mvc:view-controller path="/clueIndex" view-name="workbench/clue/index"></mvc:view-controller>
-    <mvc:view-controller path="/clueDetail" view-name="workbench/clue/detail"></mvc:view-controller>
     <mvc:view-controller path="/clueConvert" view-name="workbench/clue/convert"></mvc:view-controller>
 
     <mvc:view-controller path="/customerIndex" view-name="workbench/customer/index"></mvc:view-controller>

@@ -9,12 +9,11 @@ import com.atguigu.crm.workbench.domain.Clue;
 import com.atguigu.crm.workbench.service.ClueService;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
+import org.apache.ibatis.annotations.Param;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpSession;
 import java.util.HashMap;
@@ -39,6 +38,15 @@ public class ClueController {
         List<User> userList = clueService.getUserList();
 
         return userList;
+    }
+    /**
+     * 通过id查询线索细节
+     */
+    @RequestMapping(value = "/clue/{id}",method = RequestMethod.GET)
+    public String selectClueById(@PathVariable("id") String id, Model model){
+        Clue clue = clueService.selectClueById(id);
+        model.addAttribute("clue",clue);
+        return "workbench/clue/detail";
     }
     /**
      * 分页查询线索
@@ -79,7 +87,32 @@ public class ClueController {
         Map<String ,Object> map = new HashMap<>();
         map.put("flag",flag);
 
+        return map;
+    }
 
+    /**
+     * 查询clue关联的市场活动信息
+     */
+    @RequestMapping(value = "/activity",method = RequestMethod.GET)
+    @ResponseBody
+    public List<Activity>  selectActivityByClueId(String clueId){
+
+        System.out.println("进入查询方法");
+        List<Activity>  activitys = clueService.selectActivityByClueId(clueId);
+
+        return activitys;
+    }
+
+    /**
+     * 解除clue关联的市场活动信息
+     */
+    @RequestMapping(value = "/activity/{id}",method = RequestMethod.DELETE)
+    @ResponseBody
+    public Map<String ,Object>  deleteRelationByCARId(@PathVariable("id") String CARId){
+
+        boolean flag = clueService.deleteRelationByCARId(CARId);
+        Map<String ,Object> map = new HashMap<>();
+        map.put("flag",flag);
         return map;
     }
 }

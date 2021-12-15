@@ -25,4 +25,6 @@ public interface ActivityDao {
     int updateActivity(Activity activity);
 
     Map<String, Object> selectActivityDetailById(@Param(value = "id")String id);
+
+    List<Activity> selectActivityByClueId(String clueId);
 }

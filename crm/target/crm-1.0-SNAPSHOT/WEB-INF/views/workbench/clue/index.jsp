@@ -68,13 +68,6 @@
 				}
 			})
 
-			// var html = "";
-			<%--$.each("${applicationScope.dic.map.appellation}",function (i,n){--%>
-			<%--	html += "<option value='" + n.value + "'>"+ n.text+ "</option>";--%>
-			<%--});--%>
-			// $("#create-appellation").html(html);
-
-
 
 			//模态窗口日期选择框
 			$("#create-nextContactTime").datetimepicker({
@@ -184,7 +177,7 @@
 	//加载页面信息
 	function pageList(pageNo,pageSize){
 		//将全选的复选框的√干掉
-		// $(":checkbox").prop("checked",false);
+		$(":checkbox").prop("checked",false);
 
 		//查询数据，页面加载完成执行
 		$.ajax({
@@ -212,7 +205,7 @@
 				$.each(data.list,function (i,c) {
 					html += '<tr>';
 					html += '<td><input type="checkbox" class="checkbox"/></td>';
-					html += '<td><a style="text-decoration: none; cursor: pointer;" onclick="window.location.href=\'clueDetail\';">'+c.fullname+'</a></td>';
+					html += '<td><a style="text-decoration: none; cursor: pointer;" onclick="window.location.href=\'workbench/clue/'+c.id+'\';">'+c.fullname+'</a></td>';
 					html += '<td>'+ c.company +'</td>';
 					html += '<td>'+ c.phone +'</td>';
 					html += '<td>'+ c.mphone+'</td>';
