@@ -27,13 +27,54 @@
 					$.each(data,function (i,user){
 						$html += "<option value='" + user.id + "'>"+ user.name+ "</option>";
 					});
-
 					$("#create-clueOwner").html($html);
+
 					//下拉框默认选中登录者数据
 					var id = "${sessionScope.user.id}";
 					$("#create-clueOwner").val(id);
 				}
 			})
+
+			//加载数据字典数据
+			$.ajax({
+				url:"setting/dic",
+				data:{
+					appellation:"appellation",
+					clueState:"clueState",
+					source:"source"
+				},
+				type:"GET",
+				dataType:"json",
+				success:function (data) {
+					var html = "<option></option>";
+					$.each(data.appellation,function (i,n){
+						html += "<option value='" + n.value + "'>"+ n.text+ "</option>";
+					});
+					$("#create-appellation").html(html);
+
+					var html = "<option></option>";
+					$.each(data.clueState,function (i,n){
+						html += "<option value='" + n.value + "'>"+ n.text+ "</option>";
+					});
+					$("#create-clueState").html(html);
+
+
+					var html = "<option></option>";
+					$.each(data.source,function (i,n){
+						html += "<option value='" + n.value + "'>"+ n.text+ "</option>";
+					});
+					$("#create-source").html(html);
+
+				}
+			})
+
+			// var html = "";
+			<%--$.each("${applicationScope.dic.map.appellation}",function (i,n){--%>
+			<%--	html += "<option value='" + n.value + "'>"+ n.text+ "</option>";--%>
+			<%--});--%>
+			// $("#create-appellation").html(html);
+
+
 
 			//模态窗口日期选择框
 			$("#create-nextContactTime").datetimepicker({
@@ -53,7 +94,7 @@
 		$("#saveClue").click(function (){
 			//获取表单中的内容
 			$.ajax({
-				url:"/workbench/clue",
+				url:"workbench/clue",
 				data:{
 					"owner" : $.trim($("#create-clueOwner").val()),
 					"company" : $.trim($("#create-company").val()),
@@ -147,7 +188,7 @@
 
 		//查询数据，页面加载完成执行
 		$.ajax({
-			url:"/workbench/clue",
+			url:"workbench/clue",
 			data:{
 				"pageNo" : pageNo,
 				"pageSize" : pageSize,
@@ -162,6 +203,7 @@
 			type:"GET",
 			dataType:"json",
 			success:function (data) {
+
 				//表格主体数据
 				//每次刷新时，清空之前的数据
 				$("#clueBodys").empty();
@@ -241,12 +283,6 @@
 							<label for="create-appellation" class="col-sm-2 control-label">称呼</label>
 							<div class="col-sm-10" style="width: 300px;">
 								<select class="form-control" id="create-appellation">
-								  <option></option>
-								  <option>先生</option>
-								  <option>夫人</option>
-								  <option>女士</option>
-								  <option>博士</option>
-								  <option>教授</option>
 								</select>
 							</div>
 							<label for="create-fullname" class="col-sm-2 control-label">姓名<span style="font-size: 15px; color: red;">*</span></label>
@@ -282,17 +318,17 @@
 							<div class="col-sm-10" style="width: 300px;">
 								<input type="text" class="form-control" id="create-mphone">
 							</div>
-							<label for="create-state" class="col-sm-2 control-label">线索状态</label>
+							<label for="create-clueState" class="col-sm-2 control-label">线索状态</label>
 							<div class="col-sm-10" style="width: 300px;">
-								<select class="form-control" id="create-state">
-								  <option></option>
-								  <option>试图联系</option>
-								  <option>将来联系</option>
-								  <option>已联系</option>
-								  <option>虚假线索</option>
-								  <option>丢失线索</option>
-								  <option>未联系</option>
-								  <option>需要条件</option>
+								<select class="form-control" id="create-clueState">
+<%--								  <option></option>--%>
+<%--								  <option>试图联系</option>--%>
+<%--								  <option>将来联系</option>--%>
+<%--								  <option>已联系</option>--%>
+<%--								  <option>虚假线索</option>--%>
+<%--								  <option>丢失线索</option>--%>
+<%--								  <option>未联系</option>--%>
+<%--								  <option>需要条件</option>--%>
 								</select>
 							</div>
 						</div>
@@ -301,21 +337,21 @@
 							<label for="create-source" class="col-sm-2 control-label">线索来源</label>
 							<div class="col-sm-10" style="width: 300px;">
 								<select class="form-control" id="create-source">
-								  <option></option>
-								  <option>广告</option>
-								  <option>推销电话</option>
-								  <option>员工介绍</option>
-								  <option>外部介绍</option>
-								  <option>在线商场</option>
-								  <option>合作伙伴</option>
-								  <option>公开媒介</option>
-								  <option>销售邮件</option>
-								  <option>合作伙伴研讨会</option>
-								  <option>内部研讨会</option>
-								  <option>交易会</option>
-								  <option>web下载</option>
-								  <option>web调研</option>
-								  <option>聊天</option>
+<%--								  <option></option>--%>
+<%--								  <option>广告</option>--%>
+<%--								  <option>推销电话</option>--%>
+<%--								  <option>员工介绍</option>--%>
+<%--								  <option>外部介绍</option>--%>
+<%--								  <option>在线商场</option>--%>
+<%--								  <option>合作伙伴</option>--%>
+<%--								  <option>公开媒介</option>--%>
+<%--								  <option>销售邮件</option>--%>
+<%--								  <option>合作伙伴研讨会</option>--%>
+<%--								  <option>内部研讨会</option>--%>
+<%--								  <option>交易会</option>--%>
+<%--								  <option>web下载</option>--%>
+<%--								  <option>web调研</option>--%>
+<%--								  <option>聊天</option>--%>
 								</select>
 							</div>
 						</div>

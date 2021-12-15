@@ -37,7 +37,6 @@ public class DicServletContextListener implements ServletContextListener {
         //获取上下文域对象
         ServletContext servletContext = event.getServletContext();
 
-        Map<String ,List> map = new HashMap<>();
         //获取全部数据字典类型
         List<DicType> dicTypeList = dicTypeDao.selectDicTypeList();
 
@@ -48,11 +47,12 @@ public class DicServletContextListener implements ServletContextListener {
 
             //查询每个类型的所有值，并将其保存到Map中
             List<DicValue> dicValueList = dicValueDao.selectDicValueForType(dicType);
-            map.put(dicType,dicValueList);
+
+            //将List保存到上下文域对象中
+            servletContext.setAttribute(dicType,dicValueList);
+
         }
 
-        //将Map保存到上下文域对象中
-        servletContext.setAttribute("dic",map);
 
 
     }
