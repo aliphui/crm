@@ -2,24 +2,24 @@ package com.atguigu.crm.workbench.domain;
 
 public class Contacts {
 	
-	private String id;
-	private String owner;
-	private String source;
-	private String customerId;
-	private String fullname;
-	private String appellation;
-	private String email;
-	private String mphone;
-	private String job;
-	private String birth;
-	private String createBy;
-	private String createTime;
-	private String editBy;
-	private String editTime;
-	private String description;
-	private String contactSummary;
-	private String nextContactTime;
-	private String address;
+	private String id;//主键
+	private String owner;//  外键——所有者
+	private String source;//来源
+	private String customerId;//  外键——客户id
+	private String fullname;//全名（人的名字）
+	private String appellation;	//称呼——先生、女士等等
+	private String email;//邮箱
+	private String mphone;//手机
+	private String job;//职业
+	private String birth;//生日
+	private String createBy;//创建人
+	private String createTime;//创建时间
+	private String editBy;//修改人
+	private String editTime;//修改时间
+	private String description;//描述
+	private String contactSummary;//联系纪要
+	private String nextContactTime;//下次联系时间
+	private String address;	//地址
 	
 	public String getId() {
 		return id;

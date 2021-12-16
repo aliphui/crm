@@ -3,6 +3,7 @@ package com.atguigu.crm.workbench.service;
 import com.atguigu.crm.setting.domain.User;
 import com.atguigu.crm.workbench.domain.Activity;
 import com.atguigu.crm.workbench.domain.Clue;
+import com.atguigu.crm.workbench.domain.ClueActivityRelation;
 
 import java.util.List;
 
@@ -19,7 +20,12 @@ public interface ClueService {
 
     Clue selectClueById(String id);
 
-    List<Activity>  selectActivityByClueId(String clueId);
+    List<Activity>  selectActivityByClueId(String clueId,String aname);
 
     boolean deleteRelationByCARId(String carId);
+
+    List<Activity> selectActivityByName(String clueId, String aname);
+
+    boolean createClueAndActivitys(List<ClueActivityRelation> list);
+
 }

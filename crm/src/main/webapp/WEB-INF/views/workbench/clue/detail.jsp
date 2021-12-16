@@ -5,7 +5,9 @@
 <meta charset="UTF-8">
 
 	<%@ include file="../../common/head.jsp" %>
-
+	<link rel="stylesheet" type="text/css" href="static/jquery/bs_pagination/jquery.bs_pagination.min.css">
+	<script type="text/javascript" src="static/jquery/bs_pagination/jquery.bs_pagination.min.js"></script>
+	<script type="text/javascript" src="static/jquery/bs_pagination/en.js"></script>
 <script type="text/javascript">
 
 	//默认情况下取消和保存按钮是隐藏的
@@ -47,12 +49,156 @@
 		});
 
 
+
+
+
+		//编辑线索按钮
+		$("#editButton").click(function (){
+
+			$.ajax({
+				url:"workbench/user",
+				data:"",
+				type:"GET",
+				dataType:"json",
+				success:function (data) {
+					var html = "";
+					$.each(data,function (i,user){
+						html += "<option value='" + user.name + "'>"+ user.name+ "</option>";
+					});
+					$("#edit-clueOwner").html(html);
+
+					//回显下拉框选中数据
+					$("#edit-clueOwner").val("${clue.owner}");
+				}
+			})
+
+			//加载数据字典数据
+			$.ajax({
+				url:"setting/dic",
+				data:{
+					appellation:"appellation",
+					clueState:"clueState",
+					source:"source"
+				},
+				type:"GET",
+				dataType:"json",
+				success:function (data) {
+					var html = "<option></option>";
+					$.each(data.appellation,function (i,n){
+						html += "<option value='" + n.value + "'>"+ n.text+ "</option>";
+					});
+					$("#edit-appellation").html(html);
+					$("#edit-appellation").val("${clue.appellation}");
+
+					var html = "<option></option>";
+					$.each(data.clueState,function (i,n){
+						html += "<option value='" + n.value + "'>"+ n.text+ "</option>";
+					});
+					$("#edit-clueState").html(html);
+					$("#edit-clueState").val("${clue.state}");
+
+
+					var html = "<option></option>";
+					$.each(data.source,function (i,n){
+						html += "<option value='" + n.value + "'>"+ n.text+ "</option>";
+					});
+					$("#edit-source").html(html);
+					$("#edit-source").val("${clue.source}");
+				}
+			})
+
+			$("#editClueModal").modal("show");
+		});
+
+
+		//打开关联市场活动模态窗口按钮
+		$("#openBundModal").click(function (){
+
+
+			//清空搜索框内的内容
+			$("#aname").val("");
+
+			showActivityNotRelctClue(1,2);
+
+			//打开关联市场活动模态窗口
+			$("#bundModal").modal("show");
+		})
+
+
+		//关联市场活动--查询市场活动框（支持模糊查询）
+		$("#aname").keydown(function (enevt){
+			if (enevt.keyCode==13){
+
+				showActivityNotRelctClue(1,2)
+
+				//防止回车键查询后，页面刷新
+				return false;
+			}
+		})
+
+
+
+		//关联市场活动按钮，
+		$("#relatActivity").click(function (){
+
+			var $checkbox = $("input[class=checkbox]:checked");
+
+
+			if ($checkbox.length == 0){
+				alert("请选择要关联的市场活动");
+			}else{
+
+				var param = "";
+				for (var i = 0; i < $checkbox.length; i++) {
+					param += "activityId=" + $($checkbox[i]).val();
+
+					if (i < $checkbox.length - 1){
+						param += "&";
+					}
+				}
+				$.ajax({
+					url:"workbench/ClueAndActivity?clueId=${clue.id}&"+param,
+					type:"POST",
+					dataType:"json",
+					success:function (data) {
+						if (data.flag){
+
+							//刷新clue关联的市场活动列表
+							showActivityRelctClue();
+
+							//关闭关联市场活动模态窗口
+							$("#bundModal").modal("hide");
+						}else{
+							alert("关联失败！");
+						}
+					}
+				});
+			}
+		})
+
+
+		//全选、全不选操作
+		$("#allcheck").click(function (){
+			$(".checkbox").prop("checked",this.checked);
+		});
+		// 动态生成的元素，我们要以on方法的形式来触发事件
+		// 语法：
+		// 		$(需要绑定元素的有效的外层元素).on(绑定事件的方式,需要绑定的元素的jquery对象,回调函数)
+		$("#selectActivityBodys").on("click",$(".checkbox"),function () {
+			$("#allcheck").prop("checked",$(".checkbox").length==$(".checkbox:checked").length);
+		})
+
+		showActivityRelctClue();
+
+	})
+
+
+
+	//clue关联的市场活动列表
+	function showActivityRelctClue(){
 		//页面加载完成之后,加载关联市场活动信息
 		$.ajax({
-			url:"workbench/activity",
-			data:{
-				"clueId":"${clue.id}"
-			},
+			url:"workbench/ClueAndActivity/${clue.id}",
 			type:"GET",
 			dataType:"json",
 			success:function (data) {
@@ -71,17 +217,16 @@
 					html += '/tr>';
 				})
 				$("#activityBodys").html(html);
-				alert("成功2");
 			}
 		});
-	})
+	}
 
 	//解除市场活动关联
 	function  deleteRelation(id){
 		if(confirm("确定解除关联吗？")){
 			//页面加载完成之后,加载关联市场活动信息
 			$.ajax({
-				url:"workbench/activity/" + id,
+				url:"workbench/ClueAndActivity/" + id,
 				type:"DELETE",
 				dataType:"json",
 				success:function (data) {
@@ -91,11 +236,66 @@
 					}else{
 						alert("解除关联失败！")
 					}
-
 				}
 			});
 		}
+	}
 
+	//分页查询clue没有关联的市场活动列表
+	function showActivityNotRelctClue(pageNo,pageSize){
+		//将全选的复选框的√干掉
+		$(":checkbox").prop("checked",false);
+
+		$.ajax({
+			url:"workbench/ClueAndActivity",
+			data:{
+				"pageNo":pageNo,
+				"pageSize":pageSize,
+				"clueId":"${clue.id}",
+				"aname":$.trim($("#aname").val())
+			},
+			type:"GET",
+			dataType:"json",
+			success:function (data){
+
+				//列表主体数据
+				// $("#selectActivityBodys").empty();
+				var html = "";
+				$.each(data.list,function (i,n){
+					html += '<tr>';
+					html += '<td><input type="checkbox" class="checkbox" value="'+ n.id +'"/></td>';
+					html += '<td>' + n.name + '</td>';
+					html += '<td>' + n.startDate + '</td>';
+					html += '<td>' + n.endDate + '</td>';
+					html += '<td>' + n.owner + '</td>';
+					html += '</tr>';
+				})
+				$("#selectActivityBodys").html(html);
+
+
+				//分页条
+				//数据处理完毕后，结合分页查询，对前端展现分页信息
+				$("#ActivityPage").bs_pagination({
+					currentPage: pageNo, // 页码
+					rowsPerPage: pageSize, // 每页显示的记录条数
+					maxRowsPerPage: 20, // 每页最多显示的记录条数
+					totalPages: data.pages, // 总页数
+					totalRows: data.total, // 总记录条数
+
+					visiblePageLinks: data.navigatePages, // 显示几个卡片
+
+					showGoToPage: true,
+					showRowsPerPage: true,
+					showRowsInfo: true,
+					showRowsDefaultInfo: true,
+
+					//该回调函数时在，点击分页组件的时候触发的
+					onChangePage : function(event, data){
+						showActivityNotRelctClue(data.currentPage , data.rowsPerPage);
+					}
+				});
+			}
+		})
 	}
 
 </script>
@@ -117,7 +317,7 @@
 					<div class="btn-group" style="position: relative; top: 18%; left: 8px;">
 						<form class="form-inline" role="form">
 						  <div class="form-group has-feedback">
-						    <input type="text" class="form-control" style="width: 300px;" placeholder="请输入市场活动名称，支持模糊查询">
+						    <input type="text" class="form-control" id="aname" style="width: 300px;" placeholder="请输入市场活动名称，支持模糊查询">
 						    <span class="glyphicon glyphicon-search form-control-feedback"></span>
 						  </div>
 						</form>
@@ -125,7 +325,7 @@
 					<table id="activityTable" class="table table-hover" style="width: 900px; position: relative;top: 10px;">
 						<thead>
 							<tr style="color: #B3B3B3;">
-								<td><input type="checkbox"/></td>
+								<td><input type="checkbox" id="allcheck"/></td>
 								<td>名称</td>
 								<td>开始日期</td>
 								<td>结束日期</td>
@@ -133,27 +333,17 @@
 								<td></td>
 							</tr>
 						</thead>
-						<tbody>
-							<tr>
-								<td><input type="checkbox"/></td>
-								<td>发传单</td>
-								<td>2020-10-10</td>
-								<td>2020-10-20</td>
-								<td>zhangsan</td>
-							</tr>
-							<tr>
-								<td><input type="checkbox"/></td>
-								<td>发传单</td>
-								<td>2020-10-10</td>
-								<td>2020-10-20</td>
-								<td>zhangsan</td>
-							</tr>
+						<tbody id="selectActivityBodys">
+
 						</tbody>
 					</table>
+					<div id="ActivityPage">
+
+					</div>
 				</div>
 				<div class="modal-footer">
 					<button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
-					<button type="button" class="btn btn-primary" data-dismiss="modal">关联</button>
+					<button type="button" class="btn btn-primary" id="relatActivity" >关联</button>
 				</div>
 			</div>
 		</div>
@@ -176,9 +366,9 @@
                             <label for="edit-clueOwner" class="col-sm-2 control-label">所有者<span style="font-size: 15px; color: red;">*</span></label>
                             <div class="col-sm-10" style="width: 300px;">
                                 <select class="form-control" id="edit-clueOwner">
-                                    <option>zhangsan</option>
-                                    <option>lisi</option>
-                                    <option>wangwu</option>
+<%--                                    <option>zhangsan</option>--%>
+<%--                                    <option>lisi</option>--%>
+<%--                                    <option>wangwu</option>--%>
                                 </select>
                             </div>
                             <label for="edit-company" class="col-sm-2 control-label">公司<span style="font-size: 15px; color: red;">*</span></label>
@@ -188,15 +378,15 @@
                         </div>
 
                         <div class="form-group">
-                            <label for="edit-call" class="col-sm-2 control-label">称呼</label>
+                            <label for="edit-appellation" class="col-sm-2 control-label">称呼</label>
                             <div class="col-sm-10" style="width: 300px;">
-                                <select class="form-control" id="edit-call">
-                                    <option></option>
-                                    <option selected>先生</option>
-                                    <option>夫人</option>
-                                    <option>女士</option>
-                                    <option>博士</option>
-                                    <option>教授</option>
+                                <select class="form-control" id="edit-appellation">
+<%--                                    <option></option>--%>
+<%--                                    <option selected>先生</option>--%>
+<%--                                    <option>夫人</option>--%>
+<%--                                    <option>女士</option>--%>
+<%--                                    <option>博士</option>--%>
+<%--                                    <option>教授</option>--%>
                                 </select>
                             </div>
                             <label for="edit-surname" class="col-sm-2 control-label">姓名<span style="font-size: 15px; color: red;">*</span></label>
@@ -232,17 +422,10 @@
                             <div class="col-sm-10" style="width: 300px;">
                                 <input type="text" class="form-control" id="edit-mphone" value="12345678901">
                             </div>
-                            <label for="edit-status" class="col-sm-2 control-label">线索状态</label>
+                            <label for="edit-clueState" class="col-sm-2 control-label">线索状态</label>
                             <div class="col-sm-10" style="width: 300px;">
-                                <select class="form-control" id="edit-status">
-                                    <option></option>
-                                    <option>试图联系</option>
-                                    <option>将来联系</option>
-                                    <option selected>已联系</option>
-                                    <option>虚假线索</option>
-                                    <option>丢失线索</option>
-                                    <option>未联系</option>
-                                    <option>需要条件</option>
+                                <select class="form-control" id="edit-clueState">
+
                                 </select>
                             </div>
                         </div>
@@ -251,21 +434,7 @@
                             <label for="edit-source" class="col-sm-2 control-label">线索来源</label>
                             <div class="col-sm-10" style="width: 300px;">
                                 <select class="form-control" id="edit-source">
-                                    <option></option>
-                                    <option selected>广告</option>
-                                    <option>推销电话</option>
-                                    <option>员工介绍</option>
-                                    <option>外部介绍</option>
-                                    <option>在线商场</option>
-                                    <option>合作伙伴</option>
-                                    <option>公开媒介</option>
-                                    <option>销售邮件</option>
-                                    <option>合作伙伴研讨会</option>
-                                    <option>内部研讨会</option>
-                                    <option>交易会</option>
-                                    <option>web下载</option>
-                                    <option>web调研</option>
-                                    <option>聊天</option>
+
                                 </select>
                             </div>
                         </div>
@@ -323,11 +492,11 @@
 	<!-- 大标题 -->
 	<div style="position: relative; left: 40px; top: -30px;">
 		<div class="page-header">
-			<h3>李四先生 <small>动力节点</small></h3>
+			<h3>${clue.fullname}${clue.appellation} <small>${clue.company}</small></h3>
 		</div>
 		<div style="position: relative; height: 50px; width: 500px;  top: -72px; left: 700px;">
-			<button type="button" class="btn btn-default" onclick="window.location.href='clueConvert';"><span class="glyphicon glyphicon-retweet"></span> 转换</button>
-			<button type="button" class="btn btn-default" data-toggle="modal" data-target="#editClueModal"><span class="glyphicon glyphicon-edit"></span> 编辑</button>
+			<button type="button" class="btn btn-default" onclick="window.location.href='clueConvert?id=${clue.id}&fullname=${clue.fullname}&appellation=${clue.appellation}&owner=${clue.owner}&company=${clue.company}';"><span class="glyphicon glyphicon-retweet"></span> 转换</button>
+			<button type="button" class="btn btn-default" id="editButton"><span class="glyphicon glyphicon-edit"></span> 编辑</button>
 			<button type="button" class="btn btn-danger"><span class="glyphicon glyphicon-minus"></span> 删除</button>
 		</div>
 	</div>
@@ -346,31 +515,31 @@
 			<div style="width: 300px; color: gray;">公司</div>
 			<div style="width: 300px;position: relative; left: 200px; top: -20px;"><b>${clue.company}</b></div>
 			<div style="width: 300px;position: relative; left: 450px; top: -40px; color: gray;">职位</div>
-			<div style="width: 300px;position: relative; left: 650px; top: -60px;"><b>${clue.job}</b></div>
+			<div style="width: 300px;position: relative; left: 650px; top: -60px;"><b>${clue.job}&nbsp;&nbsp;</b></div>
 			<div style="height: 1px; width: 400px; background: #D5D5D5; position: relative; top: -60px;"></div>
 			<div style="height: 1px; width: 400px; background: #D5D5D5; position: relative; top: -60px; left: 450px;"></div>
 		</div>
 		<div style="position: relative; left: 40px; height: 30px; top: 20px;">
 			<div style="width: 300px; color: gray;">邮箱</div>
-			<div style="width: 300px;position: relative; left: 200px; top: -20px;"><b>${clue.email}</b></div>
+			<div style="width: 300px;position: relative; left: 200px; top: -20px;"><b>${clue.email}&nbsp;&nbsp;</b></div>
 			<div style="width: 300px;position: relative; left: 450px; top: -40px; color: gray;">公司座机</div>
-			<div style="width: 300px;position: relative; left: 650px; top: -60px;"><b>${clue.phone}</b></div>
+			<div style="width: 300px;position: relative; left: 650px; top: -60px;"><b>${clue.phone}&nbsp;&nbsp;</b></div>
 			<div style="height: 1px; width: 400px; background: #D5D5D5; position: relative; top: -60px;"></div>
 			<div style="height: 1px; width: 400px; background: #D5D5D5; position: relative; top: -60px; left: 450px;"></div>
 		</div>
 		<div style="position: relative; left: 40px; height: 30px; top: 30px;">
 			<div style="width: 300px; color: gray;">公司网站</div>
-			<div style="width: 300px;position: relative; left: 200px; top: -20px;"><b>${clue.website}</b></div>
+			<div style="width: 300px;position: relative; left: 200px; top: -20px;"><b>${clue.website}&nbsp;&nbsp;</b></div>
 			<div style="width: 300px;position: relative; left: 450px; top: -40px; color: gray;">手机</div>
-			<div style="width: 300px;position: relative; left: 650px; top: -60px;"><b>${clue.mphone}</b></div>
+			<div style="width: 300px;position: relative; left: 650px; top: -60px;"><b>${clue.mphone}&nbsp;&nbsp;</b></div>
 			<div style="height: 1px; width: 400px; background: #D5D5D5; position: relative; top: -60px;"></div>
 			<div style="height: 1px; width: 400px; background: #D5D5D5; position: relative; top: -60px; left: 450px;"></div>
 		</div>
 		<div style="position: relative; left: 40px; height: 30px; top: 40px;">
 			<div style="width: 300px; color: gray;">线索状态</div>
-			<div style="width: 300px;position: relative; left: 200px; top: -20px;"><b>${clue.state}</b></div>
+			<div style="width: 300px;position: relative; left: 200px; top: -20px;"><b>${clue.state}&nbsp;&nbsp;</b></div>
 			<div style="width: 300px;position: relative; left: 450px; top: -40px; color: gray;">线索来源</div>
-			<div style="width: 300px;position: relative; left: 650px; top: -60px;"><b>${clue.source}</b></div>
+			<div style="width: 300px;position: relative; left: 650px; top: -60px;"><b>${clue.source}&nbsp;&nbsp;</b></div>
 			<div style="height: 1px; width: 400px; background: #D5D5D5; position: relative; top: -60px;"></div>
 			<div style="height: 1px; width: 400px; background: #D5D5D5; position: relative; top: -60px; left: 450px;"></div>
 		</div>
@@ -388,7 +557,7 @@
 			<div style="width: 300px; color: gray;">描述</div>
 			<div style="width: 630px;position: relative; left: 200px; top: -20px;">
 				<b>
-					${clue.description}
+					${clue.description}&nbsp;&nbsp;
 				</b>
 			</div>
 			<div style="height: 1px; width: 850px; background: #D5D5D5; position: relative; top: -20px;"></div>
@@ -397,21 +566,21 @@
 			<div style="width: 300px; color: gray;">联系纪要</div>
 			<div style="width: 630px;position: relative; left: 200px; top: -20px;">
 				<b>
-					${clue.contactSummary}
+					${clue.contactSummary}&nbsp;&nbsp;
 				</b>
 			</div>
 			<div style="height: 1px; width: 850px; background: #D5D5D5; position: relative; top: -20px;"></div>
 		</div>
 		<div style="position: relative; left: 40px; height: 30px; top: 90px;">
 			<div style="width: 300px; color: gray;">下次联系时间</div>
-			<div style="width: 300px;position: relative; left: 200px; top: -20px;"><b>${clue.nextContactTime}</b></div>
+			<div style="width: 300px;position: relative; left: 200px; top: -20px;"><b>${clue.nextContactTime}&nbsp;&nbsp;</b></div>
 			<div style="height: 1px; width: 400px; background: #D5D5D5; position: relative; top: -20px; "></div>
 		</div>
         <div style="position: relative; left: 40px; height: 30px; top: 100px;">
             <div style="width: 300px; color: gray;">详细地址</div>
             <div style="width: 630px;position: relative; left: 200px; top: -20px;">
                 <b>
-					${clue.address}
+					${clue.address}&nbsp;&nbsp;
                 </b>
             </div>
             <div style="height: 1px; width: 850px; background: #D5D5D5; position: relative; top: -20px;"></div>
@@ -481,20 +650,19 @@
 						</tr>
 					</thead>
 					<tbody id="activityBodys">
-
-						<tr>
-							<td>发传单</td>
-							<td>2020-10-10</td>
-							<td>2020-10-20</td>
-							<td>zhangsan</td>
-							<td><a href="javascript:void(0);"  style="text-decoration: none;"><span class="glyphicon glyphicon-remove"></span>解除关联</a></td>
-						</tr>
+<%--						<tr>--%>
+<%--							<td>发传单</td>--%>
+<%--							<td>2020-10-10</td>--%>
+<%--							<td>2020-10-20</td>--%>
+<%--							<td>zhangsan</td>--%>
+<%--							<td><a href="javascript:void(0);"  style="text-decoration: none;"><span class="glyphicon glyphicon-remove"></span>解除关联</a></td>--%>
+<%--						</tr>--%>
 					</tbody>
 				</table>
 			</div>
 			
 			<div>
-				<a href="javascript:void(0);" data-toggle="modal" data-target="#bundModal" style="text-decoration: none;"><span class="glyphicon glyphicon-plus"></span>关联市场活动</a>
+				<a href="javascript:void(0);" id="openBundModal" style="text-decoration: none;"><span class="glyphicon glyphicon-plus"></span>关联市场活动</a>
 			</div>
 		</div>
 	</div>

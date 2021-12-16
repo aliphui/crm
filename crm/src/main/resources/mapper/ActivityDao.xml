@@ -46,6 +46,24 @@
         join tbl_clue_activity_relation car
         on a.id = car.activityId
         where car.clueId = #{clueId}
+            <if test="aname!=null and aname!=''">
+                and a.name like "%" #{aname} "%"
+            </if>
+    </select>
+    <select id="selectActivityByName" resultType="Activity">
+        select a.id, a.name, a.startDate, a.endDate, u.name as owner
+        from tbl_activity a
+        join tbl_user u
+        on a.owner = u.id
+        where
+            <if test="aname!=null and aname!=''">
+                a.name like "%" #{aname} "%" and
+            </if>
+                a.id not in(
+                    select activityId
+                    from tbl_clue_activity_relation
+                    where clueId=#{clueId}
+                )
     </select>
     <insert id="createActivity">
         insert into tbl_activity (id,owner,name,startDate,endDate,cost,description,createTime,createBy)
