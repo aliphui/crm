@@ -4,8 +4,81 @@
   "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
 <mapper namespace="com.atguigu.crm.workbench.dao.TranDao">
-	
-  	
+	<insert id="createTran">
+        insert into tbl_tran
+        values (
+            #{id},
+            #{owner},
+            #{money},
+            #{name},
+            #{expectedDate},
+            #{customerId},
+            #{stage},
+            #{type},
+            #{source},
+            #{activityId},
+            #{contactsId},
+            #{createBy},
+            #{createTime},
+            #{editBy},
+            #{editTime},
+            #{description},
+            #{contactSummary},
+            #{nextContactTime}
+               )
+    </insert>
+
+    <select id="selectTranPage" resultType="Tran">
+        select
+            t.id,
+            u.name owner,
+            t.money,
+            t.name,
+            t.expectedDate,
+            cu.name customerId,
+            t.stage,
+            t.type,
+            t.source,
+            a.name activityId,
+            co.fullname contactsId,
+            t.createBy,
+            t.createTime,
+            t.editBy,
+            t.editTime,
+            t.description,
+            t.contactSummary,
+            t.nextContactTime
+        from tbl_tran t
+        left join tbl_user u on t.owner=u.id
+        left join tbl_customer cu on t.customerId=cu.id
+        left join tbl_activity a on t.activityId=a.id
+        left join tbl_contacts co on t.contactsId=co.id
+        <where>
+            <if test="owner != null and owner != '' ">
+                and u.name=#{owner}
+            </if>
+            <if test="name != null and name != '' ">
+                and t.name = #{name}
+            </if>
+            <if test="customerId != null and customerId != '' ">
+                and cu.name = #{customerId}
+            </if>
+            <if test="stage != null and stage != '' ">
+                and t.stage = #{stage}
+            </if>
+            <if test="type != null and type != '' ">
+                and t.type = #{type}
+            </if>
+            <if test="source != null and source != '' ">
+                and t.source = #{source}
+            </if>
+            <if test="contactsId != null and contactsId != '' ">
+                and co.name = #{contactsId}
+            </if>
+        </where>
+        order by t.createTime desc
+
+    </select>
 </mapper>
 
 

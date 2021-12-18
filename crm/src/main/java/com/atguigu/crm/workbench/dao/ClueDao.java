@@ -16,5 +16,17 @@ public interface ClueDao {
 
     Clue selectClueAndUserByClueId(@Param("id") String id);
 
-    int deleteRelationByCARId(String CARId);
+    /**
+     * 根据clueId查询clue
+     * @param clueId
+     * @return
+     */
+    Clue selectClueById(@Param("clueId") String clueId);
+
+    /**
+     * 通过id删除clue
+     * @param id
+     * @return
+     */
+    int deleteById(@Param("id") String id);
 }

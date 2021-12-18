@@ -95,34 +95,13 @@
 		$("#converClueBtn").click(function (){
 			if ($("#isCreateTransaction").prop("checked")){
 				//创建交易，转换客户、联系人
-				$.ajax({
-					url:"workbench/converClueAndCreateTransaction",
-					data: {
-
-					},
-					Type:"get",
-					dataType:"json",
-					success:function (data){
-
-
-					}
-				})
+				$("#tranForm").submit();
 			}else{
 				//转换客户、联系人
-				$.ajax({
-					url:"workbench/converClue",
-					data: {
-
-					},
-					Type:"get",
-					dataType:"json",
-					success:function (data){
-
-
-					}
-				})
+				window.location.href="workbench/converClue?clueId=${param.id}";
 			}
 		})
+
 
 	});
 
@@ -215,28 +194,29 @@
 	</div>
 	<div id="create-transaction2" style="position: relative; left: 40px; top: 20px; width: 80%; background-color: #F7F7F7; display: none;" >
 	
-		<form>
+		<form id="tranForm" action="workbench/converClue" method="post">
+			<input type="hidden" name="clueId" value="${param.id}">
 		  <div class="form-group" style="width: 400px; position: relative; left: 20px;">
 		    <label for="amountOfMoney">金额</label>
-		    <input type="text" class="form-control" id="amountOfMoney">
+		    <input type="text" class="form-control" id="amountOfMoney" name="money">
 		  </div>
 		  <div class="form-group" style="width: 400px;position: relative; left: 20px;">
 		    <label for="tradeName">交易名称</label>
-		    <input type="text" class="form-control" id="tradeName" value="动力节点-">
+		    <input type="text" class="form-control" id="tradeName" value="动力节点-" name="name">
 		  </div>
 		  <div class="form-group" style="width: 400px;position: relative; left: 20px;">
 		    <label for="expectedClosingDate">预计成交日期</label>
-		    <input type="text" class="form-control time" id="expectedClosingDate">
+		    <input type="text" class="form-control time" id="expectedClosingDate"  name="expectedDate">
 		  </div>
-		  <div class="form-group" style="width: 400px;position: relative; left: 20px;">
+		  <div class="form-group" style="width: 400px;position: relative; left: 20px;" >
 		    <label for="stage">阶段</label>
-		    <select id="stage"  class="form-control">
+		    <select id="stage"  class="form-control"  name="stage">
 		    </select>
 		  </div>
 		  <div class="form-group" style="width: 400px;position: relative; left: 20px;">
 		    <label for="activityName">市场活动源&nbsp;&nbsp;<a id="openActivityModal" href="javascript:void(0);"  style="text-decoration: none;"><span class="glyphicon glyphicon-search"></span></a></label>
 		    <input type="text" class="form-control" id="activityName" placeholder="点击上面搜索" readonly>
-			  <input type="hidden" id="activityId">
+			  <input type="hidden" id="activityId"  name="activityId">
 		  </div>
 		</form>
 		

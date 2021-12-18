@@ -2,19 +2,21 @@ package com.atguigu.crm.workbench.domain;
 
 public class Customer {
 	
-	private String id;
-	private String owner;
-	private String name;
-	private String website;
-	private String phone;
-	private String createBy;
-	private String createTime;
-	private String editBy;
-	private String editTime;
-	private String contactSummary;
-	private String nextContactTime;
-	private String description;
-	private String address;
+	private String id;//主键
+	private String owner;//  外键——所有者
+	private String name;//公司名称
+	private String website;	//公司网站
+	private String phone;//公司电话
+
+	private String createBy;	//创建人
+	private String createTime;	//创建时间
+	private String editBy;	//修改人
+	private String editTime;	//修改时间
+
+	private String contactSummary;//联系纪要
+	private String nextContactTime;//下次联系时间
+	private String description;//描述
+	private String address;	//地址
 	
 	public String getId() {
 		return id;

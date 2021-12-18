@@ -5,6 +5,25 @@
 
 <mapper namespace="com.atguigu.crm.workbench.dao.ClueActivityRelationDao">
 
+    <insert id="createClueAndActivitys">
+        insert into tbl_clue_activity_relation
+        values
+        <foreach collection="list" separator="," item="car">
+            (#{car.id},#{car.clueId},#{car.activityId})
+        </foreach>
+    </insert>
+
+
+    <select id="selectClueActivityRelationByClueId" resultType="ClueActivityRelation">
+        select * from tbl_clue_activity_relation where clueId=#{clueId}
+    </select>
+
+    <delete id="deleteById">
+        delete from tbl_clue_activity_relation where id = #{id}
+    </delete>
+    <delete id="deleteByClueId">
+        delete from tbl_clue_activity_relation where clueId = #{clueId}
+    </delete>
 </mapper>
 
 

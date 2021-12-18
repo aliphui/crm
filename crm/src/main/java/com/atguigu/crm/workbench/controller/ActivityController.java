@@ -91,7 +91,7 @@ public class ActivityController {
         return map;
     }
 
-    //删除指定activity
+    //修改指定activity
     @RequestMapping(value = "/activity",method = RequestMethod.PUT)
     @ResponseBody
     public Map<String, Boolean> updateActivity(Activity activity, HttpSession session){

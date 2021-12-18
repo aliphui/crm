@@ -5,17 +5,19 @@ public class Contacts {
 	private String id;//主键
 	private String owner;//  外键——所有者
 	private String source;//来源
-	private String customerId;//  外键——客户id
+	private String customerId;//  外键——客户id（公司）
 	private String fullname;//全名（人的名字）
 	private String appellation;	//称呼——先生、女士等等
 	private String email;//邮箱
 	private String mphone;//手机
 	private String job;//职业
 	private String birth;//生日
+
 	private String createBy;//创建人
 	private String createTime;//创建时间
 	private String editBy;//修改人
 	private String editTime;//修改时间
+
 	private String description;//描述
 	private String contactSummary;//联系纪要
 	private String nextContactTime;//下次联系时间

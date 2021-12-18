@@ -58,6 +58,14 @@ public class ActivityServiceImpl implements ActivityService {
 
     @Override
     public boolean deleteActivity(String[] id) {
+
+        //删除市场活动备注
+
+        //删除市场活动与线索的关联关系
+
+        //删除市场活动与联系人的关联关系
+
+        //删除市场活动
         int count = activityDao.deleteActivity(id);
         if (count < 1){
             return false;

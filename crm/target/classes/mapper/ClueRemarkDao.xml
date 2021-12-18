@@ -5,7 +5,13 @@
 
 <mapper namespace="com.atguigu.crm.workbench.dao.ClueRemarkDao">
 	
-  	
+  	<select id="selectClueRemarkByClueId" resultType="ClueRemark">
+        select * from tbl_clue_remark where clueId=#{clueId}
+    </select>
+
+    <delete id="deleteByClueId">
+        delete from tbl_clue_remark where clueId=#{clueId}
+    </delete>
 </mapper>
 
 

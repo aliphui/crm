@@ -13,6 +13,18 @@
 <script type="text/javascript">
 
 	$(function(){
+
+		//转换线索之后跳回此页面，判断转换是否成功
+		var flag = "${requestScope.flag}";
+		if (flag != null && flag != ""){
+			if (flag){
+				alert("转换成功");
+			}else{
+				alert("转换失败");
+			}
+		}
+
+
 		// "创建" 线索按钮
 		$("#createButton").click(function (){
 			//模态窗口下拉框数据

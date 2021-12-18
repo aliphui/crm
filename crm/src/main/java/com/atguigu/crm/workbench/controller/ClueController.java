@@ -7,6 +7,7 @@ import com.atguigu.crm.utils.UUIDUtil;
 import com.atguigu.crm.workbench.domain.Activity;
 import com.atguigu.crm.workbench.domain.Clue;
 import com.atguigu.crm.workbench.domain.ClueActivityRelation;
+import com.atguigu.crm.workbench.domain.Tran;
 import com.atguigu.crm.workbench.service.ClueService;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
@@ -56,8 +57,8 @@ public class ClueController {
     @RequestMapping(value = "/clue",method = RequestMethod.GET)
     @ResponseBody
     public PageInfo selectClueList(@RequestParam(value = "pageNo",defaultValue = "1") Integer pageNo,
-                                          @RequestParam(value = "pageSize",defaultValue = "2") Integer pageSize,
-                                          Clue clue){
+                                   @RequestParam(value = "pageSize",defaultValue = "2") Integer pageSize,
+                                   Clue clue){
 
         PageHelper.startPage(pageNo,pageSize);
 
@@ -162,12 +163,41 @@ public class ClueController {
             list.add(car);
         }
 
-
         boolean flag = clueService.createClueAndActivitys(list);
 
         Map<String ,Object> map = new HashMap<>();
         map.put("flag",flag);
 
         return map;
+    }
+
+    //创建交易，转换客户、联系人
+    @RequestMapping(value = "/converClue",method = RequestMethod.POST)
+    public String converClueCreateTran(Tran tran,@RequestParam String clueId,HttpSession session,Model model){
+
+        //获取createBy
+        User user = (User) session.getAttribute("user");
+        if (user != null){
+            String createBy = user.getName();
+            boolean flag = clueService.converClue(clueId,createBy,tran);
+            model.addAttribute("flag",flag);
+        }
+
+        return "workbench/clue/index";
+    }
+
+
+    //转换客户、联系人
+    @RequestMapping(value = "/converClue",method = RequestMethod.GET)
+    public String converClue(@RequestParam String clueId,HttpSession session,Model model){
+        //获取createBy
+        User user = (User) session.getAttribute("user");
+        if (user != null){
+            String createBy = user.getName();
+            boolean flag = clueService.converClue(clueId,createBy,null);
+            model.addAttribute("flag",flag);
+        }
+
+        return "workbench/clue/index";
     }
 }
